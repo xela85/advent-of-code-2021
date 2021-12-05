@@ -7,22 +7,16 @@ import cats.derived._
 import scala.math.pow
 
 final case class BoolStat(stats: Map[Int, BoolCount]) {
-
-  def gammaRate: Long =
-    stats.toList.foldMap { case (index, boolCount) =>
-      pow(
-        boolCount.mostCommonValue * 2,
-        index
-      ).toLong * boolCount.mostCommonValue
-    }
-
-  def epsilonRate: Long = stats.toList.foldMap { case (index, boolCount) =>
-    pow(boolCount.lessCommonValue * 2, index).toLong * boolCount.lessCommonValue
-  }
+  def gammaRate: Long = BoolStat.toDecimal(stats.view.mapValues(_.mostCommonValue).toMap)
+  def epsilonRate: Long = BoolStat.toDecimal(stats.view.mapValues(_.lessCommonValue).toMap)
 }
 object BoolStat {
 
   implicit val monoidBoolStat: Monoid[BoolStat] = semiauto.monoid
+
+  private def toDecimal(value: Map[Int, Int]) = value.toList.foldMap {
+    case (index, value) => pow(value * 2, index).toLong * value
+  }
 
   def fromLine(line: String): BoolStat =
     BoolStat(

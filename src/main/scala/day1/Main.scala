@@ -1,6 +1,6 @@
 package day1
 
-import cats.Monoid
+import cats.syntax.foldable._
 import cats.effect.{IO, IOApp}
 import fs2.Stream
 import fs2.io.file.{Files, Path}
@@ -25,11 +25,10 @@ object Main extends IOApp.Simple {
   def compute(stream: Stream[IO, Int]): IO[Int] =
     stream
       .sliding(3)
-      .map(_.toList)
-      .map(Monoid[Int].combineAll)
+      .map(_.combineAll)
       .zipWithPrevious
       .foldMap {
-        case (Some(previous), i) if i > previous => 1
+        case (Some(previous), i) if i >= previous => 1
         case _                                   => 0
       }
       .compile
