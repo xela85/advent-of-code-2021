@@ -1,4 +1,4 @@
-package example
+package day1
 
 import cats.effect.IO
 import cats.effect.testing.scalatest.AsyncIOSpec
