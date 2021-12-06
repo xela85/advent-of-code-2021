@@ -2,23 +2,14 @@ package day2
 
 import cats.effect.{IO, IOApp}
 import fs2.Stream
-import fs2.io.file.{Files, Path}
-import fs2.text.utf8
 import monocle.macros.syntax.lens._
-
-import java.nio.file.Paths
+import text.Loader
 
 object Main extends IOApp.Simple {
 
   override def run: IO[Unit] = {
-    val inputStream = Files[IO]
-      .readAll(
-        Path.fromNioPath(
-          Paths.get(ClassLoader.getSystemResource("day2/data.txt").toURI)
-        )
-      )
-      .through(utf8.decode)
-      .through(fs2.text.lines)
+    val inputStream = Loader
+      .loadFile("day2/data.txt")
       .evalMap(line => IO.fromEither(Order.parse(line)))
     compute(inputStream).flatMap(IO.println)
   }
