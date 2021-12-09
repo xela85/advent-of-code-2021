@@ -3,11 +3,7 @@ package day1
 import cats.syntax.foldable._
 import cats.effect.{IO, IOApp}
 import fs2.Stream
-import fs2.io.file.{Files, Path}
-import fs2.text.utf8
 import text.Loader
-
-import java.nio.file.Paths
 
 object Main extends IOApp.Simple {
   override def run: IO[Unit] = {

@@ -17,7 +17,7 @@ object Main extends IOApp.Simple {
       })
       .compile
       .toList
-      .map(BoolCount)
+      .map(BoolCount.apply)
       .map { stats =>
         s"most: ${stats.mostCommonValue}, less: ${stats.lessCommonValue}, product: ${stats.mostCommonValue * stats.lessCommonValue}"
       }

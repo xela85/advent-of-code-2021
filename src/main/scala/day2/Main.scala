@@ -2,8 +2,8 @@ package day2
 
 import cats.effect.{IO, IOApp}
 import fs2.Stream
-import monocle.macros.syntax.lens._
 import text.Loader
+import monocle.syntax.all._
 
 object Main extends IOApp.Simple {
 
@@ -20,14 +20,14 @@ object Main extends IOApp.Simple {
     stream
       .fold(AimState(Position(0, 0), 0)) {
         case (state, Order(length, Direction.Up)) =>
-          state.lens(_.aim).modify(_ - length)
+          state.focus(_.aim).modify(_ - length)
         case (state, Order(length, Direction.Down)) =>
-          state.lens(_.aim).modify(_ + length)
+          state.focus(_.aim).modify(_ + length)
         case (state, Order(length, Direction.Forward)) =>
           state
-            .lens(_.position.depth)
+            .focus(_.position.depth)
             .modify(_ + state.aim * length)
-            .lens(_.position.horizontal)
+            .focus(_.position.horizontal)
             .modify(_ + length)
 
       }
